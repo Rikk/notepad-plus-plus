@@ -59,11 +59,13 @@ public :
 		display();
 	};
 
-    virtual void display(bool toShow = true) const {
-        Window::display(toShow);
-        if (toShow)
-            ::SetFocus(::GetDlgItem(_hSelf, ID_GOLINE_EDIT));
-    };
+	virtual void display(bool toShow = true) const {
+		Window::display(toShow);
+		if (toShow) {
+			::SetFocus(::GetDlgItem(_hSelf, ID_GOLINE_EDIT)); // Keep focus on input box
+			::SendDlgItemMessage(_hSelf, ID_GOLINE_EDIT, EM_SETSEL, 0, -1); // Select number automatically
+		}
+	};
 
 protected :
 	enum mode {go2line, go2offsset};
@@ -72,19 +74,19 @@ protected :
 
 private :
 
-    ScintillaEditView **_ppEditView;
+	ScintillaEditView **_ppEditView;
 
-    void updateLinesNumbers() const;
+	void updateLinesNumbers() const;
 
-    void cleanLineEdit() const {
-        ::SetDlgItemText(_hSelf, ID_GOLINE_EDIT, TEXT(""));
-    };
+	void cleanLineEdit() const {
+		::SetDlgItemText(_hSelf, ID_GOLINE_EDIT, TEXT(""));
+	};
 
-    int getLine() const {
-        BOOL isSuccessful;
-        int line = ::GetDlgItemInt(_hSelf, ID_GOLINE_EDIT, &isSuccessful, FALSE);
-        return (isSuccessful?line:-1);
-    };
+	int getLine() const {
+		BOOL isSuccessful;
+		int line = ::GetDlgItemInt(_hSelf, ID_GOLINE_EDIT, &isSuccessful, FALSE);
+		return (isSuccessful?line:-1);
+	};
 
 };
 
