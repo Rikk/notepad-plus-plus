@@ -28,7 +28,10 @@
 
 #include "GoToLineDlg.h"
 
-bool optRememberLastPos = true, optUseCurrentPos = false;
+bool optRememberLastPos = true,
+     optUseCurrentPos = false,
+     optKeepDialogOpen = false,
+     optKeepDialogOnTop = false;
 
 INT_PTR CALLBACK GoToLineDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM)
 {
@@ -37,7 +40,8 @@ INT_PTR CALLBACK GoToLineDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM)
 		case WM_INITDIALOG:
 		{
 			::SendDlgItemMessage(_hSelf, IDC_RADIO_GOTOLINE, BM_SETCHECK, TRUE, 0);
-			::SendDlgItemMessage(_hSelf, IDC_CHECK_GOTO_OPTREMEMBER, BM_SETCHECK, optRememberLastPos, 0);
+			::SendDlgItemMessage(_hSelf, IDC_RADIO_GOTO_OPTREMEMBER, BM_SETCHECK, optRememberLastPos, 0);
+			::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_GOTO_KEEPONTOP), optKeepDialogOpen); //because OnTop works only with KeepOpen
 			goToCenter();
 			return TRUE;
 		}
@@ -45,7 +49,7 @@ INT_PTR CALLBACK GoToLineDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM)
 		{
 			switch (wParam)
 			{
-				case IDCANCEL: // Close
+				case IDCANCEL: //Close
 				{
 					display(false);
 					if (not optRememberLastPos and not optUseCurrentPos)
@@ -57,9 +61,12 @@ INT_PTR CALLBACK GoToLineDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM)
 					int line = getLine();
 					if (line != -1)
 					{
-						display(false);
+						if (not optKeepDialogOpen)
+							display(false);
+
 						if (not optRememberLastPos and not optUseCurrentPos)
 							cleanLineEdit();
+
 						if (_mode == go2line)
 						{
 							(*_ppEditView)->execute(SCI_ENSUREVISIBLE, line-1);
@@ -88,24 +95,42 @@ INT_PTR CALLBACK GoToLineDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM)
 					notification.nmhdr.idFrom = ::GetDlgCtrlID(_hSelf);
 					::SendMessage(_hParent, WM_NOTIFY, (WPARAM)LINKTRIGGERED, (LPARAM)&notification);
 
-					(*_ppEditView)->getFocus();
+					if (not optKeepDialogOnTop)
+						(*_ppEditView)->getFocus();
+
+					if (optKeepDialogOnTop and optKeepDialogOpen)
+						display(); //auto focus on input field
+
 					return TRUE;
 				}
-				case IDC_CHECK_GOTO_OPTREMEMBER:
-				case IDC_CHECK_GOTO_OPTUSEPOSITION:
-				case IDC_CHECK_GOTO_OPTDEFAULT:
+				case IDC_CHECK_GOTO_KEEPOPEN:
 				{
-					if (wParam == IDC_CHECK_GOTO_OPTREMEMBER)
+					bool isChecked = (BST_CHECKED == ::SendDlgItemMessage(_hSelf, IDC_CHECK_GOTO_KEEPOPEN, BM_GETCHECK, 0, 0));
+					optKeepDialogOpen = isChecked;
+					::EnableWindow(::GetDlgItem(_hSelf, IDC_CHECK_GOTO_KEEPONTOP), optKeepDialogOpen); //because OnTop works only with KeepOpen
+					return TRUE;
+				}
+				case IDC_CHECK_GOTO_KEEPONTOP:
+				{
+					bool isChecked = (BST_CHECKED == ::SendDlgItemMessage(_hSelf, IDC_CHECK_GOTO_KEEPONTOP, BM_GETCHECK, 0, 0));
+					optKeepDialogOnTop = isChecked;
+					return TRUE;
+				}
+				case IDC_RADIO_GOTO_OPTREMEMBER:
+				case IDC_RADIO_GOTO_OPTUSEPOSITION:
+				case IDC_RADIO_GOTO_OPTDEFAULT:
+				{
+					if (wParam == IDC_RADIO_GOTO_OPTREMEMBER)
 					{
 						optRememberLastPos = true;
 						optUseCurrentPos = false;
 					}
-					else if (wParam == IDC_CHECK_GOTO_OPTUSEPOSITION)
+					else if (wParam == IDC_RADIO_GOTO_OPTUSEPOSITION)
 					{
 						optRememberLastPos = false;
 						optUseCurrentPos = true;
 					}
-					else // old default
+					else //old default
 					{
 						optRememberLastPos = false;
 						optUseCurrentPos = false;
@@ -137,11 +162,12 @@ INT_PTR CALLBACK GoToLineDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM)
 				}
 			}
 		}
-		case WM_NCACTIVATE:
+		case WM_ACTIVATE:
 		{
-			::SetFocus(::GetDlgItem(_hSelf, ID_GOLINE_EDIT)); // Keep focus on input box
-			::SendDlgItemMessage(_hSelf, ID_GOLINE_EDIT, EM_SETSEL, 0, -1); // Select number automatically
-			return FALSE;
+			if (wParam != WA_INACTIVE) //active states
+				display();
+
+			return TRUE;
 		}
 		default:
 			return FALSE;
@@ -160,8 +186,8 @@ void GoToLineDlg::updateLinesNumbers() const
 	}
 	else
 	{
-		current = (unsigned int)(*_ppEditView)->execute(SCI_GETCURRENTPOS);
-		limit = (unsigned int)((*_ppEditView)->getCurrentDocLen() - 1);
+		current = (unsigned int)((*_ppEditView)->execute(SCI_GETCURRENTPOS));
+		limit = (unsigned int)((*_ppEditView)->execute(SCI_GETLENGTH));
 	}
 
 	::SetDlgItemInt(_hSelf, ID_CURRLINE, current, FALSE);
