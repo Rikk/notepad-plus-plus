@@ -65,10 +65,10 @@ void TabBar::init(HINSTANCE hInst, HWND parent, bool isVertical, bool isTraditio
 	icce.dwSize = sizeof(icce);
 	icce.dwICC = ICC_TAB_CLASSES;
 	InitCommonControlsEx(&icce);
-    int multiLine = isMultiLine?(_isTraditional?TCS_MULTILINE:0):0;
+	int multiLine = isMultiLine?(_isTraditional?TCS_MULTILINE:0):0;
 
 	int style = WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE |\
-        TCS_FOCUSNEVER | TCS_TABS | WS_TABSTOP | vertical | multiLine;
+				TCS_FOCUSNEVER | TCS_TABS | WS_TABSTOP | vertical | multiLine;
 
 	_hSelf = ::CreateWindowEx(
 				0,
@@ -257,12 +257,10 @@ void TabBarPlus::init(HINSTANCE hInst, HWND parent, bool isVertical, bool isTrad
 	icce.dwSize = sizeof(icce);
 	icce.dwICC = ICC_TAB_CLASSES;
 	InitCommonControlsEx(&icce);
-    int multiLine = isMultiLine?(_isTraditional?TCS_MULTILINE:0):0;
+	int multiLine = isMultiLine?(_isTraditional?TCS_MULTILINE:0):0;
 
 	int style = WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE |\
-        TCS_FOCUSNEVER | TCS_TABS | vertical | multiLine;
-
-	style |= TCS_OWNERDRAWFIXED;
+				TCS_FOCUSNEVER | TCS_OWNERDRAWFIXED | TCS_TABS | vertical | multiLine;
 
 	_hSelf = ::CreateWindowEx(
 				0,
@@ -349,7 +347,10 @@ void TabBarPlus::init(HINSTANCE hInst, HWND parent, bool isVertical, bool isTrad
 
 void TabBarPlus::doOwnerDrawTab()
 {
-	::SendMessage(_hwndArray[0], TCM_SETPADDING, 0, MAKELPARAM(6, 0));
+	const int paddingSizeDynamicW = NppParameters::getInstance()->_dpiManager.scaleX(6);
+	const int paddingSizePlusClosebuttonDynamicW = NppParameters::getInstance()->_dpiManager.scaleX(9);
+
+	::SendMessage(_hwndArray[0], TCM_SETPADDING, 0, MAKELPARAM(paddingSizeDynamicW, 0));
 	for (int i = 0 ; i < _nbCtrl ; ++i)
 	{
 		if (_hwndArray[i])
@@ -363,8 +364,6 @@ void TabBarPlus::doOwnerDrawTab()
 			::SetWindowLongPtr(_hwndArray[i], GWL_STYLE, style);
 			::InvalidateRect(_hwndArray[i], NULL, TRUE);
 
-			const int paddingSizeDynamicW = NppParameters::getInstance()->_dpiManager.scaleX(6);
-			const int paddingSizePlusClosebuttonDynamicW = NppParameters::getInstance()->_dpiManager.scaleX(9);
 			::SendMessage(_hwndArray[i], TCM_SETPADDING, 0, MAKELPARAM(_drawTabCloseButton ? paddingSizePlusClosebuttonDynamicW : paddingSizeDynamicW, 0));
 		}
 	}
