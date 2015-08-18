@@ -67,7 +67,7 @@ void StatusBar::init(HINSTANCE hInst, HWND hPere, int nbParts)
 		0,
 		STATUSCLASSNAME,
 		TEXT(""),
-		WS_CHILD | SBARS_SIZEGRIP ,
+		WS_CHILD, // | SBARS_SIZEGRIP ,
 		0, 0, 0, 0,
 		_hParent, nullptr, _hInst, 0);
 
