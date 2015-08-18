@@ -263,6 +263,16 @@ void FindReplaceDlg::create(int dialogID, bool isRTL)
 	_tab.insertAtEnd(findInFiles);
 	_tab.insertAtEnd(mark);
 
+	// Some position adjustments to the container of the tabs
+	rect.top += NppParameters::getInstance()->_dpiManager.scaleY(5);
+	rect.left += NppParameters::getInstance()->_dpiManager.scaleX(5);
+	rect.right -= NppParameters::getInstance()->_dpiManager.scaleX(8);
+	rect.bottom -= (8 + NppParameters::getInstance()->_dpiManager.scaleY(24)); //8 brute, because status bar does not resize correctly (8+24=32)
+
+	int tabPaddingX = NppParameters::getInstance()->_dpiManager.scaleX(5);
+	int tabPaddingY = NppParameters::getInstance()->_dpiManager.scaleY(5);
+	TabCtrl_SetPadding(_tab.getHSelf(), tabPaddingX, tabPaddingY);
+
 	_tab.reSizeTo(rect);
 	_tab.display();
 
@@ -583,13 +593,14 @@ INT_PTR CALLBACK FindReplaceDlg::run_dlgProc(UINT message, WPARAM wParam, LPARAM
 			_replaceClosePos.left = p.x;
 			_replaceClosePos.top = p.y;
 
-			 p = getTopPoint(::GetDlgItem(_hSelf, IDREPLACEALL));
-			 _findInFilesClosePos.left = p.x;
-			 _findInFilesClosePos.top = p.y;
+			p = getTopPoint(::GetDlgItem(_hSelf, IDREPLACEALL));
+			_findInFilesClosePos.left = p.x;
+			_findInFilesClosePos.top = p.y;
 
-			 p = getTopPoint(::GetDlgItem(_hSelf, IDCANCEL));
-			 _findClosePos.left = p.x;
-			 _findClosePos.top = p.y + 10;
+			p = getTopPoint(::GetDlgItem(_hSelf, IDCANCEL));
+			int _findClosePosTopSpace = NppParameters::getInstance()->_dpiManager.scaleY(10); // Avoid Close button overlapping
+			_findClosePos.left = p.x;
+			_findClosePos.top = p.y + _findClosePosTopSpace;
 
 			return TRUE;
 		}
@@ -2398,6 +2409,9 @@ void FindReplaceDlg::drawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	::SetBkColor(lpDrawItemStruct->hDC, bgColor);
 	RECT rect;
 	_statusBar.getClientRect(rect);
+
+	rect.left += NppParameters::getInstance()->_dpiManager.scaleX(5); // Adjust position of the text, to have a margin on left.
+
 	::DrawText(lpDrawItemStruct->hDC, ptStr, lstrlen(ptStr), &rect, DT_SINGLELINE | DT_VCENTER | DT_LEFT);
 }
 
