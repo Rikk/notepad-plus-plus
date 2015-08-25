@@ -219,7 +219,7 @@ LRESULT SplitterContainer::runProc(UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					rc0.right = int(wParam);
 
-					rc1.left = int(wParam) + _x + _splitter.getPhisicalSize();
+					rc1.left = int(wParam) + _x + _splitter.getPhysicalSize(); //get Physical Size
 					rc1.right = rc1.right - rc1.left + _x;
 				}
 			}
@@ -229,7 +229,7 @@ LRESULT SplitterContainer::runProc(UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					rc0.bottom = int(lParam);
 
-					rc1.top   = int(lParam) + _y + _splitter.getPhisicalSize();
+					rc1.top   = int(lParam) + _y + _splitter.getPhysicalSize();
 					rc1.bottom = rc1.bottom - rc1.top + _y;
 				}
 			}

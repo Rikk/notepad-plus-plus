@@ -43,7 +43,7 @@
 #define WM_DOPOPUPMENU			(SPLITTER_USER + 3)
 #define WM_RESIZE_CONTAINER		(SPLITTER_USER + 4)
 
-const int HIEGHT_MINIMAL = 15;
+const int HEIGHT_MINIMAL = 15;
 
 
 enum class Arrow { left, up, right, down };
@@ -70,19 +70,19 @@ public:
 	virtual void destroy() override;
 
 	void resizeSpliter(RECT *pRect = NULL);
-	void init(HINSTANCE hInst, HWND hPere, int splitterSize, double iSplitRatio, DWORD dwFlags);
+	void init(HINSTANCE hInst, HWND hPere, long splitterSize, double iSplitRatio, DWORD dwFlags);
 	void rotate();
 
-	int getPhisicalSize() const
+	long getPhysicalSize() const
 	{
-		return _spiltterSize;
+		return _splitterSize;
 	}
 
 
 private:
 	RECT _rect;
 	double _splitPercent = 0.;
-	int _spiltterSize = 0;
+	long _splitterSize = 0;
 	bool _isDraged = false;
 	DWORD _dwFlags = 0;
 	bool _isFixed = false;
@@ -120,15 +120,15 @@ private:
 			and (p.y <= _clickZone2BR.top + _clickZone2BR.bottom));
 	}
 
-	int getSplitterFixPosX() const
+	long getSplitterFixPosX() const
 	{
 		long result = long(::SendMessage(_hParent, WM_GETSPLITTER_X, 0, 0));
-		return (LOWORD(result) - ((HIWORD(result) == static_cast<std::uint8_t>(SplitterMode::RIGHT_FIX)) ? _spiltterSize : 0));
+		return (LOWORD(result) - ((HIWORD(result) == static_cast<std::uint8_t>(SplitterMode::RIGHT_FIX)) ? _splitterSize : 0));
 	}
 
-	int getSplitterFixPosY() const
+	long getSplitterFixPosY() const
 	{
 		long result = long(::SendMessage(_hParent, WM_GETSPLITTER_Y, 0, 0));
-		return (LOWORD(result) - ((HIWORD(result) == static_cast<std::uint8_t>(SplitterMode::RIGHT_FIX)) ? _spiltterSize : 0));
+		return (LOWORD(result) - ((HIWORD(result) == static_cast<std::uint8_t>(SplitterMode::RIGHT_FIX)) ? _splitterSize : 0));
 	}
 };

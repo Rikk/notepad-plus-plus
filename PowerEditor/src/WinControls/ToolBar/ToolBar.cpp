@@ -200,9 +200,7 @@ int ToolBar::getWidth() const {
 
 int ToolBar::getHeight() const {
 	DWORD size = (DWORD)SendMessage(_hSelf, TB_GETBUTTONSIZE, 0, 0);
-	DWORD padding = (DWORD)SendMessage(_hSelf, TB_GETPADDING, 0, 0);
-	int totalHeight = HIWORD(size) + HIWORD(padding) - 3;
-	return totalHeight;
+	return HIWORD(size) + 2;
 }
 
 void ToolBar::reduce() 
@@ -403,7 +401,7 @@ void ToolBar::addToRebar(ReBar * rebar)
 
 	_pRebar->addBand(&_rbBand, true);
 
-	_rbBand.fMask   = RBBIM_CHILD | RBBIM_CHILDSIZE | RBBIM_IDEALSIZE | RBBIM_SIZE;
+	// _rbBand.fMask   = RBBIM_CHILD | RBBIM_CHILDSIZE | RBBIM_IDEALSIZE | RBBIM_SIZE;
 }
 
 void ReBar::init(HINSTANCE hInst, HWND hPere)
