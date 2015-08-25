@@ -911,7 +911,7 @@ BEGIN
     LTEXT           "You can't go further than:",ID_NOMORETHAN_STATIC,5,75,92,8
     LTEXT           "0123456789",ID_LASTLINE,100,75,45,8
     CONTROL         "&Keep window open",IDC_CHECK_GOTO_KEEPOPEN,"Button",BS_AUTOCHECKBOX,5,95,105,10
-    CONTROL         "Keep window on &top after Go",IDC_CHECK_GOTO_KEEPONTOP,"Button",BS_AUTOCHECKBOX,115,95,105,10
+    CONTROL         "Keep window &active after Go",IDC_CHECK_GOTO_KEEPONTOP,"Button",BS_AUTOCHECKBOX,115,95,105,10
     DEFPUSHBUTTON   "&Go!",IDOK,210,58,50,14,BS_NOTIFY
     PUSHBUTTON      "Clos&e",IDCANCEL,210,76,50,14,BS_NOTIFY
 END
