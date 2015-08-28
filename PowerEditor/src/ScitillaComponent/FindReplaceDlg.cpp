@@ -255,13 +255,13 @@ void FindReplaceDlg::create(int dialogID, bool isRTL)
 	
 	const TCHAR *find = TEXT("Find");
 	const TCHAR *replace = TEXT("Replace");
-	const TCHAR *findInFiles = TEXT("Find in Files");
 	const TCHAR *mark = TEXT("Mark");
+	const TCHAR *findInFiles = TEXT("Find in Files");
 
 	_tab.insertAtEnd(find);
 	_tab.insertAtEnd(replace);
-	_tab.insertAtEnd(findInFiles);
 	_tab.insertAtEnd(mark);
+	_tab.insertAtEnd(findInFiles);
 
 	// Some position adjustments to the container of the tabs
 	rect.top += NppParameters::getInstance()->_dpiManager.scaleY(5);
