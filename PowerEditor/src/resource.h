@@ -26,9 +26,9 @@
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #pragma once
 
-#define NOTEPAD_PLUS_VERSION TEXT("Notepad++ v6.8.2.Rikk")
+#define NOTEPAD_PLUS_VERSION TEXT("Notepad++ v6.8.2 Plus Edition")
 
-#define VERSION_VALUE TEXT("6.8.2.Rikk\0")
+#define VERSION_VALUE TEXT("6.8.2.Plus\0")
 #define VERSION_DIGITALVALUE 6, 8, 2, 0
 
 #ifndef IDC_STATIC
