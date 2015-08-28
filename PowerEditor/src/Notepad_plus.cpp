@@ -256,18 +256,17 @@ LRESULT Notepad_plus::init(HWND hwnd)
 	_configStyleDlg.init(_pPublicInterface->getHinst(), hwnd);
 	_preference.init(_pPublicInterface->getHinst(), hwnd);
 
-    //Marker Margin config
-    _mainEditView.setMakerStyle(svp1._folderStyle);
-    _subEditView.setMakerStyle(svp1._folderStyle);
+	//Marker Margin config
+	_mainEditView.setMakerStyle(svp1._folderStyle);
+	_subEditView.setMakerStyle(svp1._folderStyle);
 	_mainEditView.defineDocType(_mainEditView.getCurrentBuffer()->getLangType());
 	_subEditView.defineDocType(_subEditView.getCurrentBuffer()->getLangType());
 
-	//Line wrap method
-	_mainEditView.setWrapMode(svp1._lineWrapMethod);
-    _subEditView.setWrapMode(svp1._lineWrapMethod);
-
-	_mainEditView.execute(SCI_SETCARETLINEVISIBLE, svp1._currentLineHilitingShow);
-	_subEditView.execute(SCI_SETCARETLINEVISIBLE, svp1._currentLineHilitingShow);
+	//Use DirectWrite rendering. Suggestion to users: also enable Smooth Font (anti-alias) option.
+	_mainEditView.execute(SCI_SETTECHNOLOGY, SC_TECHNOLOGY_DIRECTWRITE);
+	_subEditView.execute(SCI_SETTECHNOLOGY, SC_TECHNOLOGY_DIRECTWRITE);
+	_mainEditView.execute(SCI_SETBUFFEREDDRAW, 0);
+	_subEditView.execute(SCI_SETBUFFEREDDRAW, 0);
 
 	if (svp1._doSmoothFont)
 	{
@@ -275,8 +274,15 @@ LRESULT Notepad_plus::init(HWND hwnd)
 		_subEditView.execute(SCI_SETFONTQUALITY, SC_EFF_QUALITY_LCD_OPTIMIZED);
 	}
 
+	_mainEditView.execute(SCI_SETCARETLINEVISIBLE, svp1._currentLineHilitingShow);
+	_subEditView.execute(SCI_SETCARETLINEVISIBLE, svp1._currentLineHilitingShow);
+
 	_mainEditView.execute(SCI_SETCARETLINEVISIBLEALWAYS, true);
 	_subEditView.execute(SCI_SETCARETLINEVISIBLEALWAYS, true);
+
+	//Line wrap method
+	_mainEditView.setWrapMode(svp1._lineWrapMethod);
+	_subEditView.setWrapMode(svp1._lineWrapMethod);
 
 	_mainEditView.wrap(svp1._doWrap);
 	_subEditView.wrap(svp1._doWrap);
