@@ -18,10 +18,16 @@ This aims to be a better maintained version of Notepad++, committing what is goo
 
 #### Download
 
-Download the latest Plus release from [**Releases**](https://github.com/Rikk/notepad-plus-plus/releases).
+Download the latest Plus **portable** release from [**Releases**](https://github.com/Rikk/notepad-plus-plus/releases).
+
+It also includes some extra cool plugins!
 
 
 #### Changelog
+
+**September 01, 2015**
+* Fix regression: unable to save a macro on shortcuts.xml
+* Possible fix for eventual crash on 64bit build.
 
 **August 31, 2015**
 * Fix: changing timezone caused all files to appear changed.
