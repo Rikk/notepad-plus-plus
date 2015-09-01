@@ -3272,7 +3272,7 @@ LRESULT APIENTRY Progress::wndProc(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM l
 		case WM_CREATE:
 		{
 			Progress* pw =(Progress*)((LPCREATESTRUCT)lparam)->lpCreateParams;
-			::SetWindowLongPtr(hwnd, GWLP_USERDATA, PtrToUlong(pw));
+			::SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)pw);
 			return 0;
 		}
 
